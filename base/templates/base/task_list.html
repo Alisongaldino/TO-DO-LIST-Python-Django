@@ -1,0 +1,45 @@
+{% extends 'base/main.html' %}
+{% block content %}
+{%if request.user.is_authenticated %}
+
+<div class="header-bar">
+    <div>
+        <h1>Olá!</h1>
+        <h3 style="margin:0">Você tem <i>{{count}}</i> tarefa{{ count|pluralize:"s"}} incompleta{{ count|pluralize:"s"}}</h3>
+    </div>
+
+{% else %}
+<a href="{% url 'login' %}">Login</a>
+{% endif %}
+</div>
+
+
+
+<div class="task-items-wrapper">
+    {% for task in tasks %}
+        <div class="task-wrapper">
+            {% if task.complete %}
+                <div class="task-title">
+                    <div class="task-complete-icon"></div>
+                    <i><s><a href="{% url 'task-update' task.id %}">{{task}}</a></s></i>                  
+                </div>
+                <a class="delete-link" href="{% url 'task-delete' task.id %}">&#215;</a>
+
+            {% else %}
+            <div class="task-title">
+                <div class="task-incomplete-icon"></div>
+                <a href="{% url 'task-update' task.id %}">{{task}}</a>                  
+            </div>
+            <a class="delete-link" href="{% url 'task-delete' task.id %}">&#215;</a>
+            {% endif %}
+            
+        </div>
+    {% empty %}
+    <h3> Nenhum item na lista</h3>
+    {% endfor %}
+</div>
+<div class="card-footer clearfix">
+        <a id="add-link" href="{% url 'task-create' %}"><button type="button" class="btn btn-primary float-right"><i class="fas fa-plus"></i> Add item</button></a>
+    </div>
+
+{% endblock content %}
